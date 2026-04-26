@@ -20,6 +20,14 @@ import os, sys
 #signal.signal(signal.SIGTERM, handler)
 #signal.signal(signal.SIGINT, handler)
 
+from configs import secrets, config
+from validate_secrets_and_config import check
+
+check(secrets, config)
+
+#print('test')
+#sys.exit(0)
+
 import scratchattach as sa
 import time
 import traceback
@@ -27,29 +35,47 @@ import main
 import profiles
 import notifications_transactions
 import leaderboard
-import my_secrets  # This imports USERNAME and PASSWORD
 
-platform = "s"
-ver_project = "1026899140"
+platform = "tw"
+ver_project = config.get('project')
 ver_time = {}
 
 if platform == "s":
     
-    session = sa.login(my_secrets.USERNAME, my_secrets.PASSWORD)
-    cloud = session.connect_cloud("1026899140") #replace with your project id
+    if secrets.get('password'):
+        session = sa.login(secrets.get('username'), secrets.get('password'))
+    elif secrets.get('session'):
+        session = sa.login_by_id(secrets.get('session'), username=secrets.get('username'))
+
+    cloud = session.connect_cloud(config.get('project')) #replace with your project id
 
 
     client = cloud.requests()
     
 if platform == "tw":
-    #session = sa.login(my_secrets.USERNAME, my_secrets.PASSWORD)
-    #cloud = session.connect_tw_cloud("026899140", purpose="Bot running ByteBank project", contact="Contact me on scratch: wvzack. Use wvzackscratch@gmail.com for more important matters.")
-    #client = cloud.requests()
+    if not config.get('tw_purpose') or not config.get('tw_contact'):
+        print("You will need to set up bot purpose and contact information in your .config.json to use TurboWarp!")
+        print("Example:")
+        print("{")
+        print("...")
+        print("  \"tw_purpose\":\"The reason I am using TurboWarp cloud variables is to operate the bot that is running ByteBank\",")
+        print("  \"tw_contact\":\"You can contact me on my Scratch profile which is myusername123.\"")
+        print("}")
+        print("This is required so the TurboWarp developer knows why you are using the TurboWarp cloud servers and how to contact you.")
+        sys.exit(1)
+
+    if secrets.get('password'):
+        session = sa.login(secrets.get('username'), secrets.get('password'))
+    elif secrets.get('session'):
+        session = sa.login_by_id(secrets.get('session'), username=secrets.get('username'))
+
+    cloud = session.connect_tw_cloud(config.get('project'), purpose=config.get('tw_purpose'), contact=config.get('tw_contact'))
+    client = cloud.requests()
     
     # thats hilarious
-    session = sa.login(my_secrets.USERNAME, my_secrets.PASSWORD)
+    #session = sa.login(secrets.get('username'), secrets.get('password'))
 
-    cloud = sa.get_tw_cloud("1026899140") #replace with your project id
+    cloud = sa.get_tw_cloud(config.get('project')) #replace with your project id
     client = cloud.requests()
 
 

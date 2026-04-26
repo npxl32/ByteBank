@@ -1,15 +1,17 @@
 import scratchattach as sa
 
+from configs import secrets, config
+from validate_secrets_and_config import check
 
-import my_secrets  # This imports USERNAME and PASSWORD
+check(secrets, config)
 
-session = sa.login(my_secrets.USERNAME, my_secrets.PASSWORD)
+session = None
+if secrets.get('password'):
+    session = sa.login(secrets.get('username'), secrets.get('password'))
+elif secrets.get('session'):
+    session = sa.login_by_id(secrets.get('session'), username=secrets.get('username'))
 
-
-
-
-
-project = session.connect_project("1026899140")
+project = session.connect_project(config.get('project'))
 
 def get_comment_id(user, message):
     
