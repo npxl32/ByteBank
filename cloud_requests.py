@@ -46,6 +46,7 @@ if platform == "tw":
     #cloud = session.connect_tw_cloud("026899140", purpose="Bot running ByteBank project", contact="Contact me on scratch: wvzack. Use wvzackscratch@gmail.com for more important matters.")
     #client = cloud.requests()
     
+    # thats hilarious
     session = sa.login(my_secrets.USERNAME, my_secrets.PASSWORD)
 
     cloud = sa.get_tw_cloud("1026899140") #replace with your project id

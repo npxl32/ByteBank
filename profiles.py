@@ -2,8 +2,9 @@
 import json
 import os
 from datetime import datetime, timezone
+from pathlib import Path
 
-path = "/home/pi/Python_Projects/ByteBank/profile.txt"
+path = Path(__file__).parent / 'profile.txt'
 
 def read_file():
     if not os.path.exists(path):
@@ -46,7 +47,7 @@ def view_data(user="wvzack", key="all"):
         return data.get(user_key, {}).get(key, None)
 
 def add_achievement(user, achievement):
-    
+    # can you go 2 seconds without vibecoding half of your project
     user_key = str(user) 
     
     # Load existing achievements

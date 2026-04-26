@@ -1,24 +1,27 @@
 import json
 from datetime import datetime
+from pathlib import Path
 
 def read_users():
-    f = open("/home/pi/Python_Projects/ByteBank/give_away_users.txt", "r")
-    file_contents = f.read()
-    f.close()
-    return(json.loads(file_contents))
+    path = Path(__file__).parent / 'give_away_users.txt'
+    with open(path, "r") as f:
+        file_contents = f.read()
+        return(json.loads(file_contents))
 
 def read_info():
-    f = open("/home/pi/Python_Projects/ByteBank/give_away_specification.txt", "r")
-    file_contents = f.read()
-    f.close()
-    return(json.loads(file_contents))
+    path = Path(__file__).parent / 'give_away_specification.txt'
+    with open(path, "r") as f:
+        file_contents = f.read()
+        return(json.loads(file_contents))
 
 def write_file(content):
-    f = open("/home/pi/Python_Projects/ByteBank/give_away_users.txt", "w")
-    f.write(json.dumps(content))
-    f.close()
+    path = Path(__file__).parent / 'give_away_users.txt'
+    with open(path, "w") as f:
+        f.write(json.dumps(content))
 
 def check_time():
+    # this smells suspiciously like vibecode
+
     data = read_info()
     print(data)
     # No need to convert to dict(data) if data is already a dictionary from json.loads

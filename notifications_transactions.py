@@ -1,22 +1,23 @@
 import json
 import re
 from datetime import datetime, timezone
+from pathlib import Path
 import main
 
 data = {
 }
 
 def read_file():
-    f = open("/home/pi/Python_Projects/ByteBank/notifications.txt", "r")
-    file_contents = f.read()
-    f.close()
-    return(file_contents)
+    path = Path(__file__).parent / 'notifications.txt'
+    with open(path, "r") as f:
+        file_contents = f.read()
+        return(file_contents)
 
 def write_file(content):
-    f = open("/home/pi/Python_Projects/ByteBank/notifications.txt", "w")
-    f.write(json.dumps(content))
-    f.close()
-
+    path = Path(__file__).parent / 'notifications.txt'
+    with open(path, "w") as f:
+        f.write(json.dumps(content))
+        
 def add_data(key, value):
     data = json.loads(read_file())
     data[key] = value
@@ -59,16 +60,16 @@ def clear_notifications(user):
         return("failed")
     
 def get_transaction_history():
-    f = open("/home/pi/Python_Projects/ByteBank/transaction_history.txt", "r")
-    file_contents = f.read()
-    f.close()
-    return(file_contents)
+    path = Path(__file__).parent / 'transaction_history.txt'
+    with open(path, "r") as f:
+        file_contents = f.read()
+        return(file_contents)
 
 def write_transaction_history(content):
-    f = open("/home/pi/Python_Projects/ByteBank/transaction_history.txt", "w")
-    f.write(content)
-    f.close()
-
+    path = Path(__file__).parent / 'transaction_history.txt'
+    with open(path, "w") as f:
+        f.write(content)
+    
 def add_transaction(transaction):
 	data = get_transaction_history()
 	data = data + transaction

@@ -3,7 +3,7 @@ import numpy as np
 import leaderboard
 import notifications_transactions
 import pay_message_check as mc
-
+from pathlib import Path
 
 
 startmoney = 1000
@@ -13,16 +13,15 @@ data = {
 
 
 def read_file():
-    f = open("/home/pi/Python_Projects/ByteBank/data.txt", "r")
-    file_contents = f.read()
-    f.close()
-    return(file_contents)
+    path = Path(__file__).parent / 'data.txt'
+    with open(path, "r") as f:
+        file_contents = f.read()
+        return(file_contents)
 
 def write_file(content):
-    f = open("/home/pi/Python_Projects/ByteBank/data.txt", "w")
-    f.write(json.dumps(content))
-    f.close()
-    
+    path = Path(__file__).parent / 'data.txt'
+    with open(path, "w") as f:
+        f.write(json.dumps(content))
 
 def add_save(key, value):
     data = json.loads(read_file())
@@ -104,6 +103,8 @@ def gift_user(to_user, amount):
 #FUNCTIONS
 
 #The following script is made by gemini
+# wow okay wow. incredible
+# you needed AN AI for this???
 
 def append_to_notifications_string_based(data_string):
     """
