@@ -35,10 +35,22 @@ import main
 import profiles
 import notifications_transactions
 import leaderboard
+import secrets as python_secrets_module # i should not have named the other thing secrets
+from datetime import datetime
+import turbowarp_verify_check
 
 platform = "tw"
 ver_project = config.get('project')
 ver_time = {}
+
+tw_verification_project = config.get('tw_verification_project')
+if not tw_verification_project:
+    print("There is no TurboWarp verification project set in your .config.json. Set the property \"tw_verification_project\" to the project ID of the verification project, so users can comment on it. This is required for TurboWarp support.")
+    if platform == "tw":
+        print("Exiting due to no TurboWarp verification project.")
+        sys.exit(1)
+else:
+    tw_verification_project = sa.get_project(tw_verification_project)
 
 if platform == "s":
     
@@ -71,9 +83,6 @@ if platform == "tw":
 
     cloud = session.connect_tw_cloud(config.get('project'), purpose=config.get('tw_purpose'), contact=config.get('tw_contact'))
     client = cloud.requests()
-    
-    # thats hilarious
-    #session = sa.login(secrets.get('username'), secrets.get('password'))
 
     cloud = sa.get_tw_cloud(config.get('project')) #replace with your project id
     client = cloud.requests()
@@ -96,7 +105,27 @@ def get_balance(user):
         print(f"Error retrieving balance for {client.get_requester()}: {e}")
         return "Error retrieving balance. Check the Python console for details."
 
-    
+@client.request
+def check_tw_verify(requester):
+    if platform == 'tw':
+        try:
+            # todo: change so that it sends a "Verifying..." message to the user and then later sends back a success or failure
+            # actually maybe not...
+            verifyResult = turbowarp_verify_check.checkVerification(tw_verification_project, str(requester))
+            print(verifyResult)
+            if verifyResult:
+                print(str(requester) + " verified on TurboWarp for " + verifyResult.get('goal'))
+                return verifyResult.get('goal')
+            else:
+                print(str(requester) + " failed to verify on TurboWarp")
+                return "n"
+        except Exception as e:
+            print("Error TurboWarp verifying " + str(requester) + ": " + str(e))
+            traceback.print_exc()
+            return "n"
+        
+    elif platform == 's':
+        return "n"    
 
 @client.request
 def pay(to, amount, message, requester=""):
@@ -108,8 +137,15 @@ def pay(to, amount, message, requester=""):
         except:
             return("user non existent")
     if platform == "tw":
-        user = sa.get_user(to)
-        from_user = session.connect_user(str(requester).lower())
+        try:
+            user = sa.get_user(to)
+        except:
+            return "user non existent"
+
+        token = python_secrets_module.token_hex(12)
+        turbowarp_verify_check.pendVerification(requester, token, 'pay')
+        return "verif" + token
+        #from_user = session.connect_user(str(requester).lower())
 
 
     if from_user.is_new_scratcher() == False:

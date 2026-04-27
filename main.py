@@ -27,7 +27,7 @@ def add_save(key, value):
     data = json.loads(read_file())
     data[key] = value
     write_file(data)
-    #print(f"Added user: {key} with balance: {value}")  # Print confirmation message
+    print(f"Added user: {key} with balance: {value}")  # Print confirmation message
     return "done"
 
 def get_value(username):
