@@ -1,5 +1,5 @@
 # ByteBank
-ByteBank is a project that acts as a virtual currency (without value). You can find it here: https://scratch.mit.edu/projects/1026899140/ . TurboWarp support is in progress.
+ByteBank is a project that acts as a virtual currency (without value). You can find it here: https://scratch.mit.edu/projects/1026899140/ . TurboWarp support is experimental.
 
 ## Versions
 Versions will be specified as per this: The first number signifies a full change that is easier to just delete your scripts and start over, the second number signifies a client change, you will need to update your scratch client and the third number is a python scripts update you will need to update your scripts.
