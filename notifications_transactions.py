@@ -1,4 +1,5 @@
 import json
+import traceback
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -53,7 +54,7 @@ def view_notifications(user):
 def clear_notifications(user):
     try:
         data = json.loads(read_file())
-        del data[user]
+        del data[user.lower()]
         write_file(data)
         return
     except:

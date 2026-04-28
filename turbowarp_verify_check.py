@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 pending = {}
 hasPendingVerification = set()
 
-def pendVerification(username, code, goal):
+def pendVerification(username, code, goal, actiondata):
   expiry = datetime.now() + timedelta(minutes=10)
-  newVerification = {"username": username, "expiry": expiry, "goal": goal}
+  newVerification = {"username": username, "expiry": expiry, "goal": goal, "actiondata": actiondata}
 
   if not username in hasPendingVerification:
     hasPendingVerification.add(username)

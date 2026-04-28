@@ -11,10 +11,11 @@ if secrets.get('password'):
 elif secrets.get('session'):
     session = sa.login_by_id(secrets.get('session'), username=secrets.get('username'))
 
-project = session.connect_project(config.get('project'))
+project = session.connect_project(config.get('payment_message_project'))
 
 def get_comment_id(user, message):
-    
+    user = user.lower()
+
     if "|" in message:
         return
     
@@ -33,7 +34,7 @@ def get_comment_id(user, message):
         if callable(author):
             author = author()
 
-        if author.username == user and comment.content.strip() == message.strip():
+        if author.username.lower() == user and comment.content.strip() == message.strip():
             info.content = comment.content
             info.id = comment.id
             break  # stop once found
